@@ -545,6 +545,17 @@ tr.memo td { color: var(--text-dim); font-size: 14px; border-bottom: none; paddi
 .picker-title { font-size: 24px; font-weight: 700; text-align: center; letter-spacing: .02em; }
 .picker-sub { font-size: 14px; color: var(--text-dim); text-align: center; margin-bottom: 18px; }
 .picker-list { display: flex; flex-direction: column; gap: 10px; }
+.picker-label {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin: 2px 0 -2px;
+}
+.picker-or {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-dim);
+  margin: 2px 0;
+}
 .picker-note { font-size: 12px; color: var(--text-dim); text-align: center; margin-top: 20px; line-height: 1.6; }
 
 .book-card {

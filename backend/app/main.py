@@ -39,6 +39,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+@app.middleware("http")
+async def no_cache_for_ui(request, call_next):
+    """本地应用：页面和脚本不走浏览器缓存，避免改了代码还显示旧版本。"""
+    response = await call_next(request)
+    path = request.url.path
+    if path == "/" or path.endswith((".html", ".js", ".css")):
+        response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+        response.headers["Pragma"] = "no-cache"
+        response.headers["Expires"] = "0"
+    return response
+
 # 启动即建目录 / 迁移遗留数据 / 预置三个账本（幂等）
 bookreg.ensure_registry()
 
@@ -688,7 +700,7 @@ def _write_env(updates: dict[str, str]) -> None:
     """更新 backend/.env 里指定的键，保留其他内容。"""
     import re
 
-    path = config.BACKEND_DIR / ".env"
+    path = config.ENV_FILE
     lines = path.read_text(encoding="utf-8").splitlines() if path.exists() else []
     out, seen = [], set()
     for line in lines:
@@ -719,7 +731,7 @@ def _apply_llm_settings(base_url: str, model: str, api_key: str) -> None:
 @app.get("/api/settings/llm")
 def get_llm_settings():
     """当前使用的模型平台配置（key 只返回是否配置，绝不回显内容）。"""
-    env_file = config.BACKEND_DIR / ".env"
+    env_file = config.ENV_FILE
     return {
         "base_url": config.DEEPSEEK_BASE_URL,
         "model": config.MODEL,
@@ -810,6 +822,6 @@ def balances(ctx: BookResources = Depends(get_book)):
 
 
 # 前端静态托管
-FRONTEND_DIR = config.PROJECT_ROOT / "frontend"
+FRONTEND_DIR = config.RESOURCE_DIR / "frontend"   # 打包后从 _MEIPASS 读取
 if FRONTEND_DIR.exists():
     app.mount("/", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")
