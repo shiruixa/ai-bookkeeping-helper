@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>记账小助手</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- 顶部账本条（选定账本后才显示，四页共用） -->
+  <div id="bookbar" class="hidden">
+    <button id="bookbar-btn">
+      <span id="bookbar-name">账本</span>
+      <span class="bookbar-caret">▾</span>
+    </button>
+  </div>
+
+  <!-- 入口页：选择账本 -->
+  <div class="page" id="page-picker">
+    <div class="picker-wrap">
+      <div class="picker-title">记账小助手</div>
+      <div class="picker-sub">请选择要进入的账本</div>
+      <div class="picker-list" id="picker-list"><div class="empty">加载中…</div></div>
+      <button class="book-card book-new" id="picker-new">＋　新建账本</button>
+      <div class="new-form hidden" id="picker-new-form">
+        <input id="picker-new-name" type="text" placeholder="账本名称，如：2号店" maxlength="20">
+        <div class="btn-row">
+          <button class="btn primary" id="picker-new-ok">创建</button>
+          <button class="btn" id="picker-new-cancel">取消</button>
+        </div>
+      </div>
+      <div class="picker-note">公司账和个人账要分开记 —— 会计上叫「会计主体」</div>
+    </div>
+  </div>
+
+  <!-- 对话页 -->
+  <div class="page" id="page-chat">
+    <header>
+      <div class="title">记账小助手</div>
+      <div class="subtitle">把收支说给我听就行</div>
+    </header>
+    <main id="chat"></main>
+    <div id="quickbar"></div>
+    <footer class="chat-footer">
+      <input id="input" type="text" placeholder="比如：今天买了300块面粉" autocomplete="off" enterkeyhint="send">
+      <button id="send">发送</button>
+    </footer>
+  </div>
+
+  <!-- 流水页：给看不懂会计报表的人 -->
+  <div class="page hidden" id="page-flow">
+    <header>
+      <div class="title">流水账</div>
+      <div class="subtitle" id="flow-subtitle">—</div>
+    </header>
+    <main class="scroll">
+      <section class="card flow-filters">
+        <div class="search-box">
+          <input id="flow-search" type="search" placeholder="搜索" autocomplete="off">
+          <button id="flow-search-clear" class="search-clear hidden" aria-label="清空">×</button>
+        </div>
+        <div class="chips" id="flow-chips">
+          <button class="chip active" data-period="month">本月</button>
+          <button class="chip" data-period="last_month">上月</button>
+          <button class="chip" data-period="week">近7天</button>
+          <button class="chip" data-period="all">全部</button>
+          <button class="chip" data-period="custom">选日期</button>
+        </div>
+        <div class="chips" id="flow-kinds">
+          <button class="chip active" data-kind="all">全部</button>
+          <button class="chip" data-kind="income">只看收入</button>
+          <button class="chip" data-kind="expense">只看支出</button>
+          <button class="chip chip-sort" id="flow-sort">最新在前 ↓</button>
+        </div>
+        <div class="flow-range hidden" id="flow-range">
+          <label class="field">从　<input id="flow-from" type="date"></label>
+          <label class="field">到　<input id="flow-to" type="date"></label>
+        </div>
+      </section>
+      <section class="card">
+        <div class="flow-summary" id="flow-summary"><div class="empty">加载中…</div></div>
+        <div class="flow-filter-hint hidden" id="flow-filter-hint"></div>
+      </section>
+      <section class="card">
+        <div class="flow-count" id="flow-count"></div>
+        <div id="flow-list"><div class="empty">加载中…</div></div>
+      </section>
+      <div class="btn-row">
+        <a class="btn" id="flow-export">导出 CSV</a>
+      </div>
+    </main>
+  </div>
+
+  <!-- 看账页 -->
+  <div class="page hidden" id="page-books">
+    <header>
+      <div class="title">财务报表</div>
+      <div class="subtitle">账本就在这里，随时可查</div>
+    </header>
+    <main class="scroll">
+      <div class="guide">
+        <span>专业报表（借贷制）。对账请用「流水」。</span>
+        <button class="guide-btn" id="goto-flow">去看流水</button>
+      </div>
+      <div class="chips" id="period-chips">
+        <button class="chip active" data-period="month">本月</button>
+        <button class="chip" data-period="last_month">上月</button>
+        <button class="chip" data-period="week">近7天</button>
+        <button class="chip" data-period="all">全部</button>
+      </div>
+
+      <section class="card">
+        <div class="card-title">利润表</div>
+        <div id="profit-table"><div class="empty">加载中…</div></div>
+      </section>
+
+      <section class="card">
+        <div class="card-title">资产负债表</div>
+        <div id="balance-table"><div class="empty">加载中…</div></div>
+      </section>
+
+      <section class="card">
+        <div class="card-title">科目余额表</div>
+        <div id="trial-table"><div class="empty">加载中…</div></div>
+      </section>
+
+      <section class="card">
+        <div class="card-title">科目明细账</div>
+        <div class="chips small" id="ledger-chips"></div>
+        <div id="ledger-table"><div class="empty">加载中…</div></div>
+      </section>
+
+      <section class="card">
+        <div class="card-title">月末成本结转</div>
+        <div id="cc-status"><div class="empty">加载中…</div></div>
+        <p class="dim">上面是软件算的账；仓库里实际剩多少需要你去数。差额即本月销售成本。</p>
+        <label class="field">我数了一下，仓库还剩（元）
+          <input id="cc-ending" type="number" inputmode="decimal" placeholder="0">
+        </label>
+        <div class="btn-row">
+          <button class="btn primary" id="cc-preview">试算</button>
+        </div>
+        <div id="cc-result"></div>
+      </section>
+
+      <div class="btn-row">
+        <a class="btn" id="export-link" href="/api/ledger/export">导出账本文件（.bean）</a>
+      </div>
+    </main>
+  </div>
+
+  <!-- 溯源页 -->
+  <!-- 设置页：导入账单 + 操作记录 -->
+  <div class="page hidden" id="page-settings">
+    <header>
+      <div class="title">设置</div>
+      <div class="subtitle">导入旧账单、查操作记录</div>
+    </header>
+    <main class="scroll">
+      <div class="seg" id="settings-seg">
+        <button class="seg-btn active" data-sec="import">导入账单</button>
+        <button class="seg-btn" data-sec="audit">操作记录</button>
+        <button class="seg-btn" data-sec="api">API 设置</button>
+      </div>
+
+      <div class="sec" id="sec-import">
+        <section class="card">
+          <div class="card-title">上传账单文件</div>
+          <p class="dim">支持微信 / 支付宝 / 银行导出的 CSV、Excel。</p>
+          <div class="btn-row">
+            <label class="btn" for="file-input">选择文件</label>
+            <input id="file-input" type="file" accept=".csv,.xlsx,.xls" hidden>
+          </div>
+          <div id="import-status"></div>
+        </section>
+
+        <section class="card hidden" id="mapping-card">
+          <div class="card-title">确认分类科目</div>
+          <p class="dim" id="import-summary"></p>
+          <div id="mapping-table"></div>
+        </section>
+
+        <section class="card hidden" id="preview-card">
+          <div class="card-title">预览</div>
+          <div id="preview-table"></div>
+        </section>
+
+        <section class="card hidden" id="confirm-card">
+          <div class="btn-row">
+            <button class="btn primary" id="import-commit">确认导入</button>
+          </div>
+          <div id="import-result"></div>
+        </section>
+      </div>
+
+      <div class="sec hidden" id="sec-audit">
+        <section class="card">
+          <div class="card-title">操作记录<span class="card-count" id="audit-count"></span></div>
+          <div id="audit-list"><div class="empty">加载中…</div></div>
+        </section>
+      </div>
+
+      <div class="sec hidden" id="sec-api">
+        <section class="card">
+          <div class="card-title">模型平台</div>
+          <div id="api-status"><div class="empty">加载中…</div></div>
+
+          <label class="field">接口地址
+            <input id="api-base-url" type="text" placeholder="https://.../v1" autocomplete="off">
+          </label>
+          <label class="field">模型名称
+            <input id="api-model" type="text" placeholder="模型名" autocomplete="off">
+          </label>
+          <label class="field">API Key
+            <input id="api-key" type="password" placeholder="留空表示不修改" autocomplete="new-password">
+          </label>
+
+          <div class="btn-row">
+            <button class="btn primary" id="api-save">保存</button>
+            <button class="btn" id="api-test">测试连接</button>
+          </div>
+          <div id="api-result"></div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- 期初页 -->
+  <div class="page hidden" id="page-setup">
+    <header>
+      <div class="title">期初余额</div>
+      <div class="subtitle">第一次用，先填一次店里的家底</div>
+    </header>
+    <main class="scroll">
+      <section class="card">
+        <div class="card-title">现在手里有什么</div>
+        <p class="dim">填入你现在实际有的钱和货。软件用它当账本起点，<b>只填这一次</b>。</p>
+        <label class="field">开始日期
+          <input id="ob-date" type="date">
+        </label>
+        <label class="field">现金（元）<input id="ob-cash" type="number" inputmode="decimal" placeholder="0"></label>
+        <label class="field">银行/微信/支付宝（元）<input id="ob-bank" type="number" inputmode="decimal" placeholder="0"></label>
+        <label class="field">存货/货值（元）<input id="ob-inventory" type="number" inputmode="decimal" placeholder="0"></label>
+        <label class="field">别人欠我的（应收，元）<input id="ob-receivable" type="number" inputmode="decimal" placeholder="0"></label>
+        <label class="field">我欠别人的（应付，元）<input id="ob-payable" type="number" inputmode="decimal" placeholder="0"></label>
+        <label class="field">欠款/贷款（元）<input id="ob-loan" type="number" inputmode="decimal" placeholder="0"></label>
+        <div class="btn-row">
+          <button class="btn primary" id="ob-save">保存期初余额</button>
+        </div>
+        <div id="ob-result"></div>
+      </section>
+      <section class="card">
+        <div class="card-title">当前各账户余额</div>
+        <div id="ob-balances"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- 切换账本：底部弹层 -->
+  <div id="book-sheet" class="sheet hidden">
+    <div class="sheet-mask" id="sheet-mask"></div>
+    <div class="sheet-body">
+      <div class="sheet-title">切换账本</div>
+      <div id="book-list"></div>
+      <button class="book-item book-new" id="sheet-new">＋　新建账本</button>
+      <div class="new-form hidden" id="sheet-new-form">
+        <input id="sheet-new-name" type="text" placeholder="账本名称，如：2号店" maxlength="20">
+        <div class="btn-row">
+          <button class="btn primary" id="sheet-new-ok">创建</button>
+          <button class="btn" id="sheet-new-cancel">取消</button>
+        </div>
+      </div>
+      <button class="btn" id="sheet-cancel">取消</button>
+    </div>
+  </div>
+
+  <!-- 底部导航 -->
+  <nav id="tabbar" class="hidden">
+    <button class="tab active" data-tab="chat">记账</button>
+    <button class="tab" data-tab="flow">流水</button>
+    <button class="tab" data-tab="books">报表</button>
+    <button class="tab" data-tab="setup">期初</button>
+    <button class="tab" data-tab="settings">设置</button>
+  </nav>
+
+  <script src="app.js"></script>
+</body>
+</html>

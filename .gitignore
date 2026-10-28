@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# 测试缓存
+.pytest_cache/
+
+# 密钥（绝不提交）
+backend/.env
+API_data/
+
+# 运行时数据：账本、数据库、账本目录
+backend/data/*
+!backend/data/.gitkeep
+
+# 系统
+.DS_Store
+Thumbs.db
+
+# 打包产物
+build/
+dist/
+*.spec
