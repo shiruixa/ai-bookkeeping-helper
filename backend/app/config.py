@@ -50,9 +50,9 @@ def _load_env() -> None:
 
 _load_env()
 
-DEEPSEEK_BASE_URL = os.environ.get("DEEPSEEK_BASE_URL", "https://www.dmxapi.cn/v1")
+DEEPSEEK_BASE_URL = os.environ.get("DEEPSEEK_BASE_URL", "https://api.deepseek.com")
 DEEPSEEK_API_KEY = os.environ.get("DEEPSEEK_API_KEY", "")
-MODEL = os.environ.get("MODEL", "deepseek-v4-flash-guan")
+MODEL = os.environ.get("MODEL", "deepseek-flash")
 
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 LEDGER_PATH = Path(os.environ.get("LEDGER_PATH", str(DATA_DIR / "ledger.bean")))

@@ -1,6 +1,6 @@
 """
 P0 连通性验证脚本：用 API_data/令牌_模型.txt 里的 key 实测 DMXAPI 中转的
-deepseek-v4-flash-guan 模型是否可用。
+deepseek-flash 模型是否可用。
 
 验证点：
 1. 普通对话调用
@@ -21,7 +21,7 @@ import httpx
 ROOT = Path(__file__).resolve().parents[2]
 TOKEN_FILE = ROOT / "API_data" / "令牌_模型.txt"
 
-BASE_URL = os.environ.get("DEEPSEEK_BASE_URL", "https://www.dmxapi.cn/v1")
+BASE_URL = os.environ.get("DEEPSEEK_BASE_URL", "https://api.deepseek.com")
 
 
 def load_credentials() -> tuple[str, str]:
@@ -30,7 +30,7 @@ def load_credentials() -> tuple[str, str]:
         sys.exit(f"找不到令牌文件: {TOKEN_FILE}")
     lines = TOKEN_FILE.read_text(encoding="utf-8").strip().splitlines()
     api_key = lines[0].strip()
-    model = lines[1].strip() if len(lines) > 1 else "deepseek-v4-flash-guan"
+    model = lines[1].strip() if len(lines) > 1 else "deepseek-flash"
     return api_key, model
 
 

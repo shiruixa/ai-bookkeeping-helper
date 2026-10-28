@@ -48,7 +48,7 @@
 
 ## API 配置（敏感，勿写入文档/代码）
 
-- 模型名：`deepseek-v4-flash-guan`，Base URL：`https://www.dmxapi.cn/v1`（DMXAPI 中转，OpenAI 兼容）
+- 模型名：`deepseek-flash`，Base URL：`https://api.deepseek.com`（DMXAPI 中转，OpenAI 兼容）
 - key 在 `API_data/令牌_模型.txt`（第一行 key，第二行模型名），**已 gitignore，勿提交**
 - `backend/app/config.py` 自动读取该文件；可用 `backend/.env` 覆盖（见 `.env.example`）
 - 实测：JSON 抽取延迟约 8s，AI 批量分类约 5s；DMXAPI 支持 `response_format=json_object` 和 FunctionCall
