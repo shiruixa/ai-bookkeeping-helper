@@ -30,15 +30,15 @@
 
 <table>
   <tr>
-    <td width="50%"><img src="docs/screenshots/01-chat.png" width="100%"><br><sub>对话记账：说一句就出确认卡片，确认后才落账</sub></td>
-    <td width="50%"><img src="docs/screenshots/02-flow.png" width="100%"><br><sub>流水账：按天分组，可搜索、筛选、导出 CSV</sub></td>
+    <td width="50%"><img src="assets/screenshots/01-chat.png" width="100%"><br><sub>对话记账：说一句就出确认卡片，确认后才落账</sub></td>
+    <td width="50%"><img src="assets/screenshots/02-flow.png" width="100%"><br><sub>流水账：按天分组，可搜索、筛选、导出 CSV</sub></td>
   </tr>
   <tr>
-    <td><img src="docs/screenshots/03-reports.png" width="100%"><br><sub>财务报表：利润表 / 资产负债表 / 试算平衡 / 明细账</sub></td>
-    <td><img src="docs/screenshots/04-opening.png" width="100%"><br><sub>期初余额：只填一次的家底，让账本和现实对齐</sub></td>
+    <td><img src="assets/screenshots/03-reports.png" width="100%"><br><sub>财务报表：利润表 / 资产负债表 / 试算平衡 / 明细账</sub></td>
+    <td><img src="assets/screenshots/04-opening.png" width="100%"><br><sub>期初余额：只填一次的家底，让账本和现实对齐</sub></td>
   </tr>
   <tr>
-    <td colspan="2"><img src="docs/screenshots/05-settings.png" width="100%"><br><sub>设置：账单导入、操作记录、API 配置，以及公司 / 个人 / 测试多账本切换</sub></td>
+    <td colspan="2"><img src="assets/screenshots/05-settings.png" width="100%"><br><sub>设置：账单导入、操作记录、API 配置，以及公司 / 个人 / 测试多账本切换</sub></td>
   </tr>
 </table>
 
@@ -131,7 +131,7 @@ Competition/
 │   └── requirements.txt
 ├── frontend/                  原生 HTML/CSS/JS（移动端优先）
 ├── scripts/                   演示、压力测试、平台自检、打包
-├── docs/                      设计文档与使用指南
+├── assets/                    界面截图
 └── start.bat
 ```
 
@@ -203,11 +203,4 @@ cd backend
 
 ## 九、文档
 
-| 文档 | 内容 |
-|---|---|
-| `docs/AI录入方法论.md` | 从自然语言到结构化数据的完整方法、可迁移到其他领域 |
-| `docs/技术基础-大模型调用与结构化数据.md` | 模型调用、JSON 约束、Pydantic、工具调用等基础 |
-| `docs/看账指南.md` | 四张报表分别回答什么问题 |
-| `docs/使用指南.md` | 期初余额、结算周期、从零上手的完整流程 |
-| `docs/开发知识库.md` | 需求背景、设计决策、踩坑记录 |
-| `docs/Python基础-命令行与项目结构.md` | 启动命令、虚拟环境、模块路径 |
+设计文档与使用指南随参赛材料一并提交，不包含在本仓库中。

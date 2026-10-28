@@ -22,3 +22,6 @@ Thumbs.db
 build/
 dist/
 *.spec
+
+# 设计文档不随仓库上传
+docs/
