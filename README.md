@@ -26,6 +26,24 @@
 
 ---
 
+## 界面预览
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/screenshots/01-chat.png" width="100%"><br><sub>对话记账：说一句就出确认卡片，确认后才落账</sub></td>
+    <td width="50%"><img src="docs/screenshots/02-flow.png" width="100%"><br><sub>流水账：按天分组，可搜索、筛选、导出 CSV</sub></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/03-reports.png" width="100%"><br><sub>财务报表：利润表 / 资产负债表 / 试算平衡 / 明细账</sub></td>
+    <td><img src="docs/screenshots/04-opening.png" width="100%"><br><sub>期初余额：只填一次的家底，让账本和现实对齐</sub></td>
+  </tr>
+  <tr>
+    <td colspan="2"><img src="docs/screenshots/05-settings.png" width="100%"><br><sub>设置：账单导入、操作记录、API 配置，以及公司 / 个人 / 测试多账本切换</sub></td>
+  </tr>
+</table>
+
+---
+
 ## 二、快速开始（Windows）
 
 ### 环境要求
