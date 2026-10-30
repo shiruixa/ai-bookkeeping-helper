@@ -25,3 +25,7 @@ dist/
 
 # 设计文档不随仓库上传
 docs/
+
+# 开发辅助文件，不随仓库上传
+CLAUDE.md
+.claude/
